@@ -1,3 +1,4 @@
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
 public class DatabaseConnector {
@@ -48,6 +49,35 @@ public class DatabaseConnector {
             // 根据错误类型，这里应该处理各种异常情况，比如用户名重复等
             return false;
         }
+    }
+
+
+    public static DefaultTableModel getCustomerData() {
+        DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Name", "Email", "Phone", "Address", "City", "State", "ZipCode", "Country"}, 0);
+        String sql = "SELECT * FROM Customer";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                        rs.getInt("ID"),
+                        rs.getString("Name"),
+                        rs.getString("Email"),
+                        rs.getString("Phone"),
+                        rs.getString("Address"),
+                        rs.getString("City"),
+                        rs.getString("State"),
+                        rs.getString("ZipCode"),
+                        rs.getString("Country")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database errors
+        }
+        return model;
     }
 
     public static void main(String[] args) {
