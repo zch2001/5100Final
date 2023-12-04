@@ -18,5 +18,17 @@
             <version>8.0.13</version> <!-- Make sure the version matches the one you want to use -->
         </dependency>
         <!-- Any additional dependencies would also go here -->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.14.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency> 
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version> 
+        </dependency>  
     </dependencies>
 </project>

@@ -4,6 +4,8 @@
  */
 package finalproject_yupeichen;
 
+
+import com.mysql.cj.util.StringUtils;
 import finalproject_yupeichen.AddDialogForm;
 
 import finalproject_yupeichen.DatabaseConnector;
@@ -19,6 +21,12 @@ import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import javax.swing.*;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import java.awt.Rectangle;
+//import org.apache.commons.lang3.StringUtils; // Apache Commons Lang
+
 
 
 /**
@@ -51,6 +59,7 @@ public class StockManagerUI extends javax.swing.JFrame {
         TableScrollPane = new javax.swing.JScrollPane();
         ProductTable = new javax.swing.JTable();
         RefreshButton = new javax.swing.JButton();
+        SearchButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,6 +127,13 @@ public class StockManagerUI extends javax.swing.JFrame {
             }
         });
 
+        SearchButton.setText("Search");
+        SearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,7 +145,7 @@ public class StockManagerUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(RefreshButton)
                         .addGap(18, 18, 18)
                         .addComponent(UpdateButton)
@@ -140,8 +156,10 @@ public class StockManagerUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(SearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SearchButton)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +167,8 @@ public class StockManagerUI extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SearchLabel))
+                    .addComponent(SearchLabel)
+                    .addComponent(SearchButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpdateButton)
@@ -217,6 +236,36 @@ public class StockManagerUI extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(this, "Refreshed.");
         
     }//GEN-LAST:event_RefreshButtonActionPerformed
+
+    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
+        // TODO add your handling code here:
+            String searchKeyword = SearchTextField.getText().toLowerCase();
+    if (searchKeyword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a search keyword.", "No Keyword", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
+    int closestMatchIndex = -1;
+    int shortestDistance = Integer.MAX_VALUE;
+
+    for (int i = 0; i < model.getRowCount(); i++) {
+        String entry = model.getValueAt(i, 1).toString().toLowerCase(); // Assuming column 1 (index 1) has the names
+        int distance = org.apache.commons.lang3.StringUtils.getLevenshteinDistance(entry, searchKeyword); // Apache Commons Lang
+
+        if (distance < shortestDistance) {
+            shortestDistance = distance;
+            closestMatchIndex = i;
+        }
+    }
+
+    if (closestMatchIndex != -1) {
+        ProductTable.setRowSelectionInterval(closestMatchIndex, closestMatchIndex);
+        ProductTable.scrollRectToVisible(new Rectangle(ProductTable.getCellRect(closestMatchIndex, 0, true)));
+    } else {
+        JOptionPane.showMessageDialog(this, "No matching product found.", "Search", JOptionPane.INFORMATION_MESSAGE);
+    }
+    }//GEN-LAST:event_SearchButtonActionPerformed
 
 public int getSelectedProductId() {
      int selectedRow = ProductTable.getSelectedRow();
@@ -294,6 +343,7 @@ public int getSelectedProductId() {
     private javax.swing.JButton DeleteButton;
     private javax.swing.JTable ProductTable;
     private javax.swing.JButton RefreshButton;
+    private javax.swing.JButton SearchButton;
     private javax.swing.JLabel SearchLabel;
     private javax.swing.JTextField SearchTextField;
     private javax.swing.JScrollPane TableScrollPane;
