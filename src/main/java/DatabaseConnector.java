@@ -108,6 +108,29 @@ public class DatabaseConnector {
         return model;
     }
 
+    public static DefaultTableModel getProductData() {
+        DefaultTableModel model = new DefaultTableModel(new String[]{"ProductID", "Name", "Price", "Quantity"}, 0);
+        String sql = "SELECT * FROM `Product`";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                        rs.getInt("ProductID"),
+                        rs.getString("Name"),
+                        rs.getString("Price"),
+                        rs.getString("Quantity")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database errors
+        }
+        return model;
+    }
+
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/walmart_ecommerce";
         String user = "root";
