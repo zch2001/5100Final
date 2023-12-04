@@ -20,7 +20,8 @@ public class RegisterPanel extends JPanel {
         add(mainJPanel, BorderLayout.CENTER);
 
         // 添加组件
-        addLogo(mainJPanel);
+        // Comment out to avoid null pointer exception due to logo image not found. Need to figure out why this failed.
+//        addLogo(mainJPanel);
         addSeparator(mainJPanel);
         addUsernameTextField(mainJPanel);
         addPasswordTextField(mainJPanel);

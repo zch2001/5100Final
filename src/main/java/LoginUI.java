@@ -50,7 +50,8 @@ public LoginUI(MainFrame mainFrame) {
     add(mainJPanel, BorderLayout.CENTER);
 
     // 添加组件
-    addLogo(mainJPanel);
+    // Comment out to avoid null pointer exception due to logo image not found. Need to figure out why this failed.
+//    addLogo(mainJPanel);
     addSeparator(mainJPanel);
     addUsernameTextField(mainJPanel);
     addPasswordTextField(mainJPanel);
@@ -276,7 +277,7 @@ private void addRegisterButton(JPanel panel1) {
         if (DatabaseConnector.validateUser(username, password)) {
             if ("zch".equals(username)) {
                 // 如果用户名是 'zch'，则显示 AnalystPanel
-                mainFrame.switchToCard("AnalystPanel");
+                mainFrame.switchToCard("OrdersManagementPanel");
             } else {
                 // 对于其他用户，显示相应的界面
                 // 例如：mainFrame.switchToCard("SomeOtherPanel");
@@ -284,6 +285,7 @@ private void addRegisterButton(JPanel panel1) {
             // 登录成功
 //            switchToUserPage(username); // 根据用户名跳转到相应的页面
             toaster.success("Successful");
+            mainFrame.switchToCard("OrdersManagementPanel");
         } else {
             // 登录失败
             toaster.error("Invalid password");
