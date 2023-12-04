@@ -87,7 +87,6 @@ public class Customer {
     this.Country = Country;
     }
     
-    }
     public Customer() {
 }
 }
