@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
 import java.awt.Rectangle;
 //import org.apache.commons.lang3.StringUtils; // Apache Commons Lang
+import org.apache.commons.text.similarity.LevenshteinDetailedDistance;
+import org.apache.commons.text.similarity.LevenshteinResults;
 
 
 
@@ -239,8 +241,9 @@ public class StockManagerUI extends javax.swing.JFrame {
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         // TODO add your handling code here:
-            String searchKeyword = SearchTextField.getText().toLowerCase();
-    if (searchKeyword.isEmpty()) {
+        String searchKeyword = SearchTextField.getText().toLowerCase();
+    if (searchKeyword.isEmpty()) 
+    {
         JOptionPane.showMessageDialog(this, "Please enter a search keyword.", "No Keyword", JOptionPane.WARNING_MESSAGE);
         return;
     }
@@ -248,26 +251,34 @@ public class StockManagerUI extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
     int closestMatchIndex = -1;
     int shortestDistance = Integer.MAX_VALUE;
+    LevenshteinDetailedDistance levenshteinDetailedDistance = new LevenshteinDetailedDistance();
 
-    for (int i = 0; i < model.getRowCount(); i++) {
+    for (int i = 0; i < model.getRowCount(); i++) 
+    {
         String entry = model.getValueAt(i, 1).toString().toLowerCase(); // Assuming column 1 (index 1) has the names
-        int distance = org.apache.commons.lang3.StringUtils.getLevenshteinDistance(entry, searchKeyword); // Apache Commons Lang
+        LevenshteinResults results = levenshteinDetailedDistance.apply(entry, searchKeyword);
+        int distance = results.getDistance(); // This gets the integer distance from the results
 
-        if (distance < shortestDistance) {
+        if (distance < shortestDistance) 
+        {
             shortestDistance = distance;
             closestMatchIndex = i;
         }
     }
 
-    if (closestMatchIndex != -1) {
+    if (closestMatchIndex != -1) 
+    {
         ProductTable.setRowSelectionInterval(closestMatchIndex, closestMatchIndex);
         ProductTable.scrollRectToVisible(new Rectangle(ProductTable.getCellRect(closestMatchIndex, 0, true)));
-    } else {
-        JOptionPane.showMessageDialog(this, "No matching product found.", "Search", JOptionPane.INFORMATION_MESSAGE);
-    }
+    } 
+    else 
+    {
+            JOptionPane.showMessageDialog(this, "No matching product found.", "Search", JOptionPane.INFORMATION_MESSAGE);
+    }    
     }//GEN-LAST:event_SearchButtonActionPerformed
-
-public int getSelectedProductId() {
+    
+    
+    public int getSelectedProductId() {
      int selectedRow = ProductTable.getSelectedRow();
     if (selectedRow != -1) { // -1 means no selection
         Integer productId = (Integer) ProductTable.getModel().getValueAt(selectedRow, 0);
