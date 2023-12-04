@@ -82,7 +82,7 @@ public class DatabaseConnector {
 
     public static DefaultTableModel getOrderData() {
         DefaultTableModel model = new DefaultTableModel(new String[]{"OID", "CustomerID", "OrderDate", "Status", "TotalAmount", "PaymentMethod", "ShippingAddress", "BillingAddress", "Notes"}, 0);
-        String sql = "SELECT * FROM Customer";
+        String sql = "SELECT * FROM `Order`";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
