@@ -211,6 +211,38 @@ public class DatabaseConnector {
         return model;
     }
 
+    public static boolean deleteProduct(int productId) {
+        String sql = "DELETE FROM product WHERE ProductID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, productId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateProduct(int productId, String name, BigDecimal price, int quantity) {
+        String sql = "UPDATE product SET Name = ?, Price = ?, Quantity = ? WHERE ProductID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setBigDecimal(2, price);
+            pstmt.setInt(3, quantity);
+            pstmt.setInt(4, productId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static DefaultTableModel getTopFiveProducts() {
         DefaultTableModel model = new DefaultTableModel(new String[]{"ProductID", "Name", "Price", "Quantity"}, 0);
         String sql = "SELECT * FROM product LIMIT 5";
