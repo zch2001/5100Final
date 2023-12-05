@@ -307,12 +307,7 @@ public class Register extends javax.swing.JFrame {
     private void NameTextKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NameTextKeyReleased
         // TODO add your handling code here:
         
-        if(NameText.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Please Enter Name ", "Blank Error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if (NameText.getText().matches("[a-zA-Z]+")){
-            JOptionPane.showMessageDialog(this,"Names must contain only alphabetical characters.","Validation Error",JOptionPane.ERROR_MESSAGE);
-        }    
+        
     }//GEN-LAST:event_NameTextKeyReleased
 
     private void EmailLabelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_EmailLabelKeyReleased
