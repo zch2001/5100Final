@@ -3,6 +3,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.util.HashMap;
@@ -84,6 +85,7 @@ public class AnalystPanel extends JPanel {
             JScrollPane scrollPane = new JScrollPane(orderTable);
             // 更新分析面板的内容区域以显示表格
             this.setContentComponent(scrollPane);
+            createBarChart();
         });
 
         return panel;
@@ -99,6 +101,58 @@ public class AnalystPanel extends JPanel {
         contentPanel.add(component);
         contentPanel.revalidate();
         contentPanel.repaint();
+    }
+
+    public void createBarChart() {
+        System.out.println("output bar");
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        // 获取订单数据
+        DefaultTableModel orderData = DatabaseConnector.getOrderData();
+        Map<String, Integer> orderCounts = getOrderCounts(orderData);
+
+        // 将数据添加到数据集
+        for (Map.Entry<String, Integer> entry : orderCounts.entrySet()) {
+            dataset.addValue(entry.getValue(), "Orders", entry.getKey());
+        }
+
+        // 创建柱状图
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Order Price Intervals",
+                "Price Range",
+                "Number of Orders",
+                dataset);
+
+        // 将图表添加到面板
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        setContentComponent(chartPanel);
+    }
+
+    // 获取每个价格区间的订单数量
+// 获取每个价格区间的订单数量
+    private Map<String, Integer> getOrderCounts(DefaultTableModel model) {
+        Map<String, Integer> counts = new HashMap<>();
+        int rowCount = model.getRowCount();
+        DefaultTableModel orderData = DatabaseConnector.getOrderData();
+        int totalAColumnIndex = orderData.findColumn("TotalAmount");
+
+        for (int i = 0; i < rowCount; i++) {
+            // 获取TotalAmount列的值，并将其转换为Double
+            String totalAmountStr = (String) model.getValueAt(i, totalAColumnIndex);
+            double totalAmount = Double.parseDouble(totalAmountStr);
+            String range = getPriceRange(totalAmount);
+            counts.put(range, counts.getOrDefault(range, 0) + 1);
+        }
+
+        return counts;
+    }
+
+
+    // 根据总金额获取价格区间
+    private String getPriceRange(double amount) {
+        int rangeStart = ((int) amount / 100) * 100;
+        int rangeEnd = rangeStart + 99;
+        return rangeStart + "-" + rangeEnd;
     }
     // 新方法：生成并显示国家数据的饼图
     public void showCountryPieChart() {
