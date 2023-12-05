@@ -4,16 +4,19 @@
  */
 package admin;
 
+import Dao.Customer;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author hanqi
  */
 public class DatabaseConnector {
@@ -144,6 +147,35 @@ public class DatabaseConnector {
             // Handle database errors
         }
         return model;
+    }
+
+    public static List<Customer> getAllCustomer() throws SQLException {
+        String sql = "SELECT * FROM `Customer`";
+
+        List<Customer> customers = new ArrayList<Customer>();
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("ID"),
+                        rs.getString("Name"),
+                        rs.getString("Email"),
+                        rs.getString("Phone"),
+                        rs.getString("Address"),
+                        rs.getString("City"),
+                        rs.getString("State"),
+                        rs.getString("ZipCode"),
+                        rs.getString("Country")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database errors
+        }
+        return customers;
     }
 
     public static void main(String[] args) {
