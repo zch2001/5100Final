@@ -283,6 +283,9 @@ private void addRegisterButton(JPanel panel1) {
                     // 如果用户名是 'QiHan'，则显示对应的界面
                     // 例如：mainFrame.switchToCard("QiHanPanel");
                     break;
+                case "BellaR":
+                    mainFrame.switchToCard("OrderPanel");
+                    break;
                 default:
                     // 对于其他用户，跳转到 newCustomerPanel
                     mainFrame.switchToCard("NewCustomerPanel");

@@ -140,8 +140,18 @@ public class CustomerPanel extends JPanel {
         DefaultTableModel model = DatabaseConnector.getTopFiveProducts();
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 当点击 Checkout 按钮时执行的操作
+                JOptionPane.showMessageDialog(CustomerPanel.this, "Checkout successful!", "Checkout", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         contentPanel.removeAll();
+        // 将 Checkout 按钮添加到购物车面板
+        contentPanel.add(checkoutButton, BorderLayout.SOUTH);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
         contentPanel.revalidate();
         contentPanel.repaint();

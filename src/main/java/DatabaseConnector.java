@@ -1,4 +1,5 @@
 import javax.swing.table.DefaultTableModel;
+import java.math.BigDecimal;
 import java.sql.*;
 
 public class DatabaseConnector {
@@ -145,6 +146,46 @@ public class DatabaseConnector {
             // Handle database errors
         }
         return model;
+    }
+
+    public static boolean deleteOrder(int orderId) {
+        String sql = "DELETE FROM `Order` WHERE OID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, orderId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateOrder(int orderId, String customerId, String orderDate, String status, BigDecimal totalAmount, String paymentMethod, String shippingAddress, String billingAddress, String notes) {
+        String sql = "UPDATE `Order` SET CustomerID = ?, OrderDate = ?, Status = ?, TotalAmount = ?, PaymentMethod = ?, ShippingAddress = ?, BillingAddress = ?, Notes = ? WHERE OID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // 设置 SQL 参数
+            pstmt.setString(1, customerId);
+            pstmt.setString(2, orderDate);
+            pstmt.setString(3, status);
+            pstmt.setBigDecimal(4, totalAmount);
+            pstmt.setString(5, paymentMethod);
+            pstmt.setString(6, shippingAddress);
+            pstmt.setString(7, billingAddress);
+            pstmt.setString(8, notes);
+            pstmt.setInt(9, orderId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static DefaultTableModel getProductData() {
