@@ -28,7 +28,6 @@ public class Purchase extends javax.swing.JFrame {
     public Purchase() {
         initComponents();
         showPL();
-        
         txtCart.setEditable(false);
         
         
@@ -370,13 +369,14 @@ public class Purchase extends javax.swing.JFrame {
 
     private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
         // TODO add your handling code here:
-        int a = JOptionPane.showConfirmDialog(null, "Are you sure want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        int a = JOptionPane.showConfirmDialog(null, "Exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
         System.out.println(a);
         if (a == 0) {
             LoginInterface exit = new LoginInterface();
             exit.show();
             exit.setVisible(true);
             this.dispose();
+            
         
     }//GEN-LAST:event_ExitButtonActionPerformed
 
