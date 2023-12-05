@@ -6,6 +6,7 @@ package admin;
 
 import Dao.Customer;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,18 +21,18 @@ public class AdminPanel extends javax.swing.JPanel {
      * Creates new form AdminPanel
      */
     private List<Customer> customers = new ArrayList<Customer>();
-    private Customer customer = null;
+    private Customer selectedCustomer = null;
 
     public AdminPanel(Customer customer) {
         initComponents();
-        this.customer = customer;
         populateTable();
     }
 
     // Method to populate the table
     private void populateTable() {
         try {
-            this.customers = DatabaseConnector.getAllCustomer();
+            selectedCustomer = null;
+            this.customers = DatabaseConnector_ADMIN.getAllCustomer();
             DefaultTableModel model = (DefaultTableModel) adminTable.getModel();
             for (Customer customer : customers) {
                 model.addRow(new Object[]{
@@ -64,7 +65,6 @@ public class AdminPanel extends javax.swing.JPanel {
         stateTextField.setText("");
         zipCodeTextField.setText("");
         countryTextField.setText("");
-        createDateTextField.setText("");
     }
 
     /**
@@ -277,14 +277,63 @@ public class AdminPanel extends javax.swing.JPanel {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         // TODO add your handling code here:
+        if(selectedCustomer == null){
+            JOptionPane.showMessageDialog(this, "Please select a customer and edit to save","NO SELECTION",HEIGHT);
+            return;
+        }
+        selectedCustomer.setName(nameTextField.getText());
+        selectedCustomer.setEmail(emailTextField.getText());
+        selectedCustomer.setPhone(phoneTextField.getText());
+        selectedCustomer.setAddress(addressTextField.getText());
+        selectedCustomer.setCity(cityTextField.getText());
+        selectedCustomer.setState(stateTextField.getText());
+        selectedCustomer.setZipCode(zipCodeTextField.getText());
+        selectedCustomer.setCountry(countryTextField.getText());
+
+        boolean flag = DatabaseConnector_ADMIN.updateCustomer(selectedCustomer);
+        if (flag) {
+            JOptionPane.showMessageDialog(this, "Update Successfully!","Success",HEIGHT);
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Update Failed","Fail",HEIGHT);
+        }
+        populateTable();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
+        if(selectedCustomer == null){
+            JOptionPane.showMessageDialog(this, "Please select a customer and edit to delete","NO SELECTION",HEIGHT);
+            return;
+        }
+
+        boolean flag = DatabaseConnector_ADMIN.deleteCustomer(selectedCustomer);
+        if (flag) {
+            JOptionPane.showMessageDialog(this, "Delete Successfully!","Success",HEIGHT);
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Delete Failed","Fail",HEIGHT);
+        }
+        populateTable();
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         // TODO add your handling code here:
+        int selected = adminTable.getSelectedRow();
+        if (selected == -1){
+            JOptionPane.showMessageDialog(this, "Please select a customer to edit","NO SELECTION",HEIGHT);
+            return;
+        }
+        selectedCustomer = customers.get(selected);
+        nameTextField.setText(selectedCustomer.getName());
+        emailTextField.setText(selectedCustomer.getEmail());
+        phoneTextField.setText(selectedCustomer.getPhone());
+        addressTextField.setText(selectedCustomer.getAddress());
+        cityTextField.setText(selectedCustomer.getCity());
+        stateTextField.setText(selectedCustomer.getState());
+        zipCodeTextField.setText(selectedCustomer.getZipCode());
+        countryTextField.setText(selectedCustomer.getCountry());
+
     }//GEN-LAST:event_editButtonActionPerformed
 
 

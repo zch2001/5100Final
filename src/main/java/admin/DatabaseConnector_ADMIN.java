@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * @author hanqi
  */
-public class DatabaseConnector {
+public class DatabaseConnector_ADMIN {
 
     private static final String URL = "jdbc:mysql://localhost:55001/walmart_ecommerce";
     private static final String USER = "root";
@@ -149,6 +149,7 @@ public class DatabaseConnector {
         return model;
     }
 
+    // Use for AdminPanel to CRUD customers
     public static List<Customer> getAllCustomer() throws SQLException {
         String sql = "SELECT * FROM `Customer`";
 
@@ -176,6 +177,59 @@ public class DatabaseConnector {
             // Handle database errors
         }
         return customers;
+    }
+
+    // Update Customers
+    public static boolean updateCustomer(Customer customer) {
+
+        String sql = "UPDATE `Customer` SET name = ?, email = ?, phone = ?, address = ?, city = ?, state = ?, zip_code = ?, country = ? WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, customer.getName());
+            pstmt.setString(2, customer.getEmail());
+            pstmt.setString(3, customer.getPhone());
+            pstmt.setString(4, customer.getAddress());
+            pstmt.setString(5, customer.getCity());
+            pstmt.setString(6, customer.getState());
+            pstmt.setString(7, customer.getZipCode());
+            pstmt.setString(8, customer.getCountry());
+            pstmt.setInt(9, customer.getID());
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Update successful");
+            } else {
+                System.out.println("Update failed");
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    //Delete customer
+    public static boolean deleteCustomer(Customer customer) {
+
+        String sql = "DELETE FROM users WHERE id = ?";
+
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, customer.getID());
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Delete successful");
+            } else {
+                System.out.println("Delete failed");
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) {

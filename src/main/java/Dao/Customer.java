@@ -19,6 +19,10 @@ public class Customer {
     String ZipCode;
     String Country;
 
+    public Customer(){
+
+    }
+
     public Customer(int ID, String name, String email, String phone, String address, String city, String state, String zipCode, String country) {
         this.ID = ID;
         Name = name;
