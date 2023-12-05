@@ -59,6 +59,7 @@ public class Purchase extends javax.swing.JFrame {
         ProductNameLabel = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtCart = new javax.swing.JTextArea();
+        ExitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -149,6 +150,15 @@ public class Purchase extends javax.swing.JFrame {
         txtCart.setRows(5);
         jScrollPane3.setViewportView(txtCart);
 
+        ExitButton.setBackground(new java.awt.Color(204, 204, 255));
+        ExitButton.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        ExitButton.setText("Exit");
+        ExitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -169,8 +179,11 @@ public class Purchase extends javax.swing.JFrame {
                         .addComponent(PriceText, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(ProductNameText, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(ProductIDText, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ExitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -207,7 +220,9 @@ public class Purchase extends javax.swing.JFrame {
                             .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(PurchaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(39, 39, 39)
-                        .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ExitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -220,7 +235,7 @@ public class Purchase extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -335,18 +350,35 @@ public class Purchase extends javax.swing.JFrame {
                 QuantityText.setText("");
                 PriceText.setText("");
 
-                String sql = "INSERT INTO Order (CustomerID, Product, Sold, Time) VALUES (?, ?, ?,NOW())";
+                String sql = "INSERT INTO Order (CustomerID, Product, Sold, Time) VALUES (?, ?, ?, NOW())";
                 ps = conn.prepareStatement(sql);
-                ps.setString(1, TransID);
-                ps.setString(2, product);
-                ps.setInt(3, qty);
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, CustomerID); // assuming customerID is a String
+                ps.setString(2, Product);    // assuming product is a String
+                ps.setInt(3, Quantity);  // assuming soldQuantity is an int
                 ps.executeUpdate();
+
+                
+                
+  
 
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Failed to add Order to database!");
         }        // TODO add your handling code here:
     }//GEN-LAST:event_AddButtonActionPerformed
+
+    private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
+        // TODO add your handling code here:
+        int a = JOptionPane.showConfirmDialog(null, "Are you sure want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        System.out.println(a);
+        if (a == 0) {
+            LoginInterface exit = new LoginInterface();
+            exit.show();
+            exit.setVisible(true);
+            this.dispose();
+        
+    }//GEN-LAST:event_ExitButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,6 +418,7 @@ public class Purchase extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
     private javax.swing.JButton ClearButton;
+    private javax.swing.JButton ExitButton;
     private javax.swing.JLabel PriceLabel;
     private javax.swing.JTextField PriceText;
     private javax.swing.JLabel ProductIDLabel;
