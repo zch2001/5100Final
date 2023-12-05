@@ -42,7 +42,6 @@ public class StockManagerUI extends javax.swing.JFrame {
      * Creates new form StockManagerUI
      */
     public StockManagerUI(MainFrame mainframe) {
-        this.mainframe=mainframe;
         initComponents();
     }
 

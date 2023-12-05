@@ -308,7 +308,7 @@ public class DatabaseConnector {
         return model;
     }
     
-    //YuPei Chen
+    //YuPei Chen update
         public static ResultSet getProducts() throws SQLException {
         Connection conn = getConnection();
         Statement stmt = conn.createStatement();
