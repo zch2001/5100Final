@@ -19,6 +19,7 @@ public class AnalystPanel extends JPanel {
     private JPanel contentPanel;
 
     public AnalystPanel(MainFrame  mainFrame) {
+        this.mainFrame = mainFrame;
         // 设定布局管理器为边界布局
         setLayout(new BorderLayout());
 
@@ -44,6 +45,7 @@ public class AnalystPanel extends JPanel {
         JButton customerButton = new JButton("ShowCountry");
         JButton orderButton = new JButton("ShowOrder");
         JButton inventoryButton = new JButton("ShowProduct");
+        JButton backButton = new JButton("back");
 
         // 设置按钮的最大和预期大小以保持一致性
         Dimension buttonSize = new Dimension(120, 40); // 按钮的推荐大小
@@ -53,6 +55,8 @@ public class AnalystPanel extends JPanel {
         orderButton.setPreferredSize(buttonSize);
         inventoryButton.setMaximumSize(buttonSize);
         inventoryButton.setPreferredSize(buttonSize);
+        backButton.setMaximumSize(buttonSize);
+        backButton.setPreferredSize(buttonSize);
 
         // 为按钮添加间隔
         panel.add(Box.createVerticalStrut(20));
@@ -61,7 +65,13 @@ public class AnalystPanel extends JPanel {
         panel.add(orderButton);
         panel.add(Box.createVerticalStrut(20));
         panel.add(inventoryButton);
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(backButton);
         panel.add(Box.createVerticalGlue()); // 在按钮之后添加一个可拉伸的空白区域
+
+        backButton.addActionListener(e -> {
+            mainFrame.switchToCard("LoginUI");
+        });
 
         // 假设这是按钮的事件处理器
         customerButton.addActionListener(e -> {
