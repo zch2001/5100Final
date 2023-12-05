@@ -80,6 +80,45 @@ public class DatabaseConnector {
         return model;
     }
 
+    /**
+     * Adds a new customer to the database.
+     *
+     * @param name     The customer's name.
+     * @param email    The customer's email.
+     * @param phone    The customer's phone number.
+     * @param address  The customer's address.
+     * @param city     The customer's city.
+     * @param state    The customer's state.
+     * @param zipCode  The customer's zip code.
+     * @param country  The customer's country.
+     * @return boolean True if the operation is successful, false otherwise.
+     */
+    public static boolean addCustomer(String name, String email, String phone, String address, String city, String state, String zipCode, String country) {
+        // SQL statement to insert a new customer
+        String sql = "INSERT INTO Customer (Name, Email, Phone, Address, City, State, ZipCode, Country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, phone);
+            pstmt.setString(4, address);
+            pstmt.setString(5, city);
+            pstmt.setString(6, state);
+            pstmt.setString(7, zipCode);
+            pstmt.setString(8, country);
+
+            // Execute the update
+            int affectedRows = pstmt.executeUpdate();
+            // Check if a row was added
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static DefaultTableModel getOrderData() {
         DefaultTableModel model = new DefaultTableModel(new String[]{"OID", "CustomerID", "OrderDate", "Status", "TotalAmount", "PaymentMethod", "ShippingAddress", "BillingAddress", "Notes"}, 0);
         String sql = "SELECT * FROM `Order`";
@@ -110,7 +149,7 @@ public class DatabaseConnector {
 
     public static DefaultTableModel getProductData() {
         DefaultTableModel model = new DefaultTableModel(new String[]{"ProductID", "Name", "Price", "Quantity"}, 0);
-        String sql = "SELECT * FROM `Product`";
+        String sql = "SELECT * FROM `product`";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
@@ -130,6 +169,30 @@ public class DatabaseConnector {
         }
         return model;
     }
+
+    public static DefaultTableModel getTopFiveProducts() {
+        DefaultTableModel model = new DefaultTableModel(new String[]{"ProductID", "Name", "Price", "Quantity"}, 0);
+        String sql = "SELECT * FROM product LIMIT 5";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                        rs.getInt("ProductID"),
+                        rs.getString("Name"),
+                        rs.getBigDecimal("Price"),
+                        rs.getInt("Quantity")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database errors
+        }
+        return model;
+    }
+
 
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/walmart_ecommerce";

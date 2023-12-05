@@ -274,12 +274,19 @@ private void addRegisterButton(JPanel panel1) {
         String password = new String(passwordField.getPassword());
 
         if (DatabaseConnector.validateUser(username, password)) {
-            if ("zch".equals(username)) {
-                // 如果用户名是 'zch'，则显示 AnalystPanel
-                mainFrame.switchToCard("AnalystPanel");
-            } else {
-                // 对于其他用户，显示相应的界面
-                // 例如：mainFrame.switchToCard("SomeOtherPanel");
+            switch (username) {
+                case "zch":
+                    // 如果用户名是 'zch'，则显示 AnalystPanel 或相应的界面
+                    mainFrame.switchToCard("AnalystPanel");
+                    break;
+                case "QiHan":
+                    // 如果用户名是 'QiHan'，则显示对应的界面
+                    // 例如：mainFrame.switchToCard("QiHanPanel");
+                    break;
+                default:
+                    // 对于其他用户，跳转到 newCustomerPanel
+                    mainFrame.switchToCard("NewCustomerPanel");
+                    break;
             }
             // 登录成功
 //            switchToUserPage(username); // 根据用户名跳转到相应的页面

@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
         cardPanel.add(new LoginUI(this), "LoginUI");
         cardPanel.add(new RegisterPanel(this), "RegisterPanel");
         cardPanel.add(new AnalystPanel(this),"AnalystPanel");
+        cardPanel.add(new CustomerPanel(this),"NewCustomerPanel");
 
 
         // 添加其他页面
