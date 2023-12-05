@@ -40,9 +40,9 @@ public class AnalystPanel extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // 垂直排列
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 边距
 
-        JButton customerButton = new JButton("Customer");
-        JButton orderButton = new JButton("Order");
-        JButton inventoryButton = new JButton("Inventory");
+        JButton customerButton = new JButton("ShowCountry");
+        JButton orderButton = new JButton("ShowOrder");
+        JButton inventoryButton = new JButton("ShowProduct");
 
         // 设置按钮的最大和预期大小以保持一致性
         Dimension buttonSize = new Dimension(120, 40); // 按钮的推荐大小

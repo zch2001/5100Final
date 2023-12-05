@@ -81,6 +81,46 @@ public class DatabaseConnector {
         return model;
     }
 
+    public static boolean deleteCustomer(int customerId) {
+        String sql = "DELETE FROM Customer WHERE ID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, customerId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public static boolean updateCustomer(int customerID, String name, String email, String phone, String address, String city, String state, String zipCode, String country) {
+        String sql = "UPDATE Customer SET Name = ?, Email = ?, Phone = ?, Address = ?, City = ?, State = ?, ZipCode = ?, Country = ? WHERE ID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, phone);
+            pstmt.setString(4, address);
+            pstmt.setString(5, city);
+            pstmt.setString(6, state);
+            pstmt.setString(7, zipCode);
+            pstmt.setString(8, country);
+            pstmt.setInt(9, customerID);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
     /**
      * Adds a new customer to the database.
      *

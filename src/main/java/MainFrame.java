@@ -15,6 +15,8 @@ public class MainFrame extends JFrame {
         cardPanel.add(new AnalystPanel(this),"AnalystPanel");
         cardPanel.add(new CustomerPanel(this),"NewCustomerPanel");
         cardPanel.add(new OrderPanel(this),"OrderPanel");
+        cardPanel.add(new AdminPanel(this),"AdminPanel");
+        cardPanel.add(new ProductPanel(this),"ProductPanel");
 
 
         // 添加其他页面

@@ -279,9 +279,13 @@ private void addRegisterButton(JPanel panel1) {
                     // 如果用户名是 'zch'，则显示 AnalystPanel 或相应的界面
                     mainFrame.switchToCard("AnalystPanel");
                     break;
-                case "QiHan":
+                case "Harper":
                     // 如果用户名是 'QiHan'，则显示对应的界面
                     // 例如：mainFrame.switchToCard("QiHanPanel");
+                    mainFrame.switchToCard("AdminPanel");
+                    break;
+                case "IsaC":
+                    mainFrame.switchToCard("ProductPanel");
                     break;
                 case "BellaR":
                     mainFrame.switchToCard("OrderPanel");

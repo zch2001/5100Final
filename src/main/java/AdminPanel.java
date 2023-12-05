@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package admin;
 
 import Dao.Customer;
+import admin.DatabaseConnector_ADMIN;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,42 +16,56 @@ import java.util.List;
  * @author hanqi
  */
 public class AdminPanel extends javax.swing.JPanel {
-
+    private MainFrame mainFrame;
     /**
      * Creates new form AdminPanel
      */
     private List<Customer> customers = new ArrayList<Customer>();
     private Customer selectedCustomer = null;
 
-    public AdminPanel(Customer customer) {
+    public AdminPanel(MainFrame mainFrame) {
         initComponents();
         populateTable();
+        adminTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && adminTable.getSelectedRow() != -1) {
+                updateTextFieldsWithSelectedCustomer();
+            }
+        });
     }
 
     // Method to populate the table
     private void populateTable() {
-        try {
+
             selectedCustomer = null;
+            DefaultTableModel customerModel = DatabaseConnector.getCustomerData();
+        try {
             this.customers = DatabaseConnector_ADMIN.getAllCustomer();
-            DefaultTableModel model = (DefaultTableModel) adminTable.getModel();
-            for (Customer customer : customers) {
-                model.addRow(new Object[]{
-                        customer.getID(),
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getPhone(),
-                        customer.getAddress(),
-                        customer.getCity(),
-                        customer.getState(),
-                        customer.getZipCode(),
-                        customer.getCountry()
-                });
-            }
-            adminTable.setModel(model);
-            clearFields();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+//            DefaultTableModel model = (DefaultTableModel) adminTable.getModel();
+//            for (Customer customer : customers) {
+//                model.addRow(new Object[]{
+//                        customer.getID(),
+//                        customer.getName(),
+//                        customer.getEmail(),
+//                        customer.getPhone(),
+//                        customer.getAddress(),
+//                        customer.getCity(),
+//                        customer.getState(),
+//                        customer.getZipCode(),
+//                        customer.getCountry()
+//                });
+//            }
+            adminTable.setModel(customerModel);
+        adminTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && adminTable.getSelectedRow() != -1) {
+                updateTextFieldsWithSelectedCustomer();
+            }
+        });
+//            clearFields();
+
 
     }
 
@@ -101,25 +115,25 @@ public class AdminPanel extends javax.swing.JPanel {
         createDateTextField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
 
-        adminTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Name", "Email", "Phone", "Address", "City", "State", "ZipCode", "Country", "CreateDate"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+//        adminTable.setModel(new javax.swing.table.DefaultTableModel(
+//            new Object [][] {
+//                {null, null, null, null, null, null, null, null, null, null},
+//                {null, null, null, null, null, null, null, null, null, null},
+//                {null, null, null, null, null, null, null, null, null, null},
+//                {null, null, null, null, null, null, null, null, null, null}
+//            },
+//            new String [] {
+//                "ID", "Name", "Email", "Phone", "Address", "City", "State", "ZipCode", "Country", "CreateDate"
+//            }
+//        ) {
+//            Class[] types = new Class [] {
+//                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+//            };
+//
+//            public Class getColumnClass(int columnIndex) {
+//                return types [columnIndex];
+//            }
+//        });
         jScrollPane1.setViewportView(adminTable);
 
         titleLabel.setFont(new java.awt.Font("Cochin", 1, 18)); // NOI18N
@@ -275,47 +289,92 @@ public class AdminPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_zipCodeTextFieldActionPerformed
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
-        if(selectedCustomer == null){
-            JOptionPane.showMessageDialog(this, "Please select a customer and edit to save","NO SELECTION",HEIGHT);
-            return;
+    private void updateTextFieldsWithSelectedCustomer() {
+        int selectedRow = adminTable.getSelectedRow();
+        if (selectedRow != -1) {
+            // 直接从 adminTable 获取数据
+            nameTextField.setText(adminTable.getValueAt(selectedRow, 1).toString()); // 假设 Name 在第二列
+            emailTextField.setText(adminTable.getValueAt(selectedRow, 2).toString()); // 假设 Email 在第三列
+            phoneTextField.setText(adminTable.getValueAt(selectedRow, 3).toString()); // 假设 Phone 在第四列
+            addressTextField.setText(adminTable.getValueAt(selectedRow, 4).toString()); // 假设 Address 在第五列
+            cityTextField.setText(adminTable.getValueAt(selectedRow, 5).toString()); // 假设 City 在第六列
+            stateTextField.setText(adminTable.getValueAt(selectedRow, 6).toString()); // 假设 State 在第七列
+            zipCodeTextField.setText(adminTable.getValueAt(selectedRow, 7).toString()); // 假设 ZipCode 在第八列
+            countryTextField.setText(adminTable.getValueAt(selectedRow, 8).toString()); // 假设 Country 在第九列
+            // createDateTextField.setText(adminTable.getValueAt(selectedRow, 9).toString()); // 假设 CreateDate 在第十列
         }
-        selectedCustomer.setName(nameTextField.getText());
-        selectedCustomer.setEmail(emailTextField.getText());
-        selectedCustomer.setPhone(phoneTextField.getText());
-        selectedCustomer.setAddress(addressTextField.getText());
-        selectedCustomer.setCity(cityTextField.getText());
-        selectedCustomer.setState(stateTextField.getText());
-        selectedCustomer.setZipCode(zipCodeTextField.getText());
-        selectedCustomer.setCountry(countryTextField.getText());
+    }
 
-        boolean flag = DatabaseConnector_ADMIN.updateCustomer(selectedCustomer);
-        if (flag) {
-            JOptionPane.showMessageDialog(this, "Update Successfully!","Success",HEIGHT);
+
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+//        // TODO add your handling code here:
+//        int selectedRow = adminTable.getSelectedRow();
+//        if(selectedRow == -1){
+//            JOptionPane.showMessageDialog(this, "Please select a customer and edit to save","NO SELECTION",HEIGHT);
+//            return;
+//        }
+//        int customerId = (Integer) adminTable.getValueAt(selectedRow, 0);
+//        selectedCustomer.setName(nameTextField.getText());
+//        selectedCustomer.setEmail(emailTextField.getText());
+//        selectedCustomer.setPhone(phoneTextField.getText());
+//        selectedCustomer.setAddress(addressTextField.getText());
+//        selectedCustomer.setCity(cityTextField.getText());
+//        selectedCustomer.setState(stateTextField.getText());
+//        selectedCustomer.setZipCode(zipCodeTextField.getText());
+//        selectedCustomer.setCountry(countryTextField.getText());
+//
+//        boolean flag = DatabaseConnector_ADMIN.updateCustomer(customerId);
+//        if (flag) {
+//            JOptionPane.showMessageDialog(this, "Update Successfully!","Success",HEIGHT);
+//        }
+//        else {
+//            JOptionPane.showMessageDialog(this, "Update Failed","Fail",HEIGHT);
+//        }
+//        populateTable();
+        int selectedRow = adminTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int customerID = (Integer) adminTable.getValueAt(selectedRow, 0); // 获取 ID
+            String name = nameTextField.getText();
+            String email = emailTextField.getText();
+            String phone = phoneTextField.getText();
+            String address = addressTextField.getText();
+            String city = cityTextField.getText();
+            String state = stateTextField.getText();
+            String zipCode = zipCodeTextField.getText();
+            String country = countryTextField.getText();
+
+            boolean flag = DatabaseConnector.updateCustomer(customerID, name, email, phone, address, city, state, zipCode, country);
+            if (flag) {
+                JOptionPane.showMessageDialog(this, "Customer updated successfully.");
+                populateTable(); // 刷新表格数据
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update customer.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a customer to edit.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        else {
-            JOptionPane.showMessageDialog(this, "Update Failed","Fail",HEIGHT);
-        }
-        populateTable();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
-        if(selectedCustomer == null){
-            JOptionPane.showMessageDialog(this, "Please select a customer and edit to delete","NO SELECTION",HEIGHT);
-            return;
-        }
+        int selectedRow = adminTable.getSelectedRow();
+        if (selectedRow != -1) {
+            // 假设客户 ID 在表格的第一列
+            int customerId = (Integer) adminTable.getValueAt(selectedRow, 0);
 
-        boolean flag = DatabaseConnector_ADMIN.deleteCustomer(selectedCustomer);
-        if (flag) {
-            JOptionPane.showMessageDialog(this, "Delete Successfully!","Success",HEIGHT);
+            // 调用 DatabaseConnector 中的删除方法
+            boolean flag = DatabaseConnector.deleteCustomer(customerId);
+            if (flag) {
+                JOptionPane.showMessageDialog(this, "Customer deleted successfully.");
+                populateTable(); // 重新加载表格数据
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete customer.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a customer to delete.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        else {
-            JOptionPane.showMessageDialog(this, "Delete Failed","Fail",HEIGHT);
-        }
-        populateTable();
     }//GEN-LAST:event_deleteButtonActionPerformed
+
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         // TODO add your handling code here:
