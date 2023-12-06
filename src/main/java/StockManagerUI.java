@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-
+package main.java;
 
 import com.mysql.cj.util.StringUtils;
 //import finalproject_yupeichen.AddDialogForm;
