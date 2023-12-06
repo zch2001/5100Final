@@ -84,3 +84,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 /build/
+/commons-text-1.11.0-bin/

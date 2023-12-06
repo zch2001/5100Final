@@ -286,9 +286,13 @@ private void addRegisterButton(JPanel panel1) {
                     break;
                 case "IsaC":
                     mainFrame.switchToCard("ProductPanel");
+                    StockManagerUI stockManagerUI = new StockManagerUI();
+                    stockManagerUI.setVisible(true);
+
                     break;
                 case "BellaR":
-                    mainFrame.switchToCard("OrderPanel");
+                    mainFrame.switchToCard("Ordermanagement");
+//                    mainFrame.switchToCard("OrderPanel");
                     break;
                 default:
                     // 对于其他用户，跳转到 newCustomerPanel

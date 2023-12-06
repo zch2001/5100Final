@@ -312,7 +312,7 @@ public class DatabaseConnector {
         public static ResultSet getProducts() throws SQLException {
         Connection conn = getConnection();
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM Product");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM product");
         return rs;
     }
 
@@ -324,7 +324,7 @@ public class DatabaseConnector {
         connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
         // Create SQL delete statement
-        String sql = "DELETE FROM Product WHERE ProductID = ?";
+        String sql = "DELETE FROM product WHERE ProductID = ?";
         preparedStatement = connection.prepareStatement(sql);
         // Assuming id is an integer
         preparedStatement.setInt(1, (Integer) id);
@@ -353,7 +353,7 @@ public class DatabaseConnector {
         String url = URL; // Replace with your database URL
         String user = USER; // Replace with your database username
         String password = PASSWORD; // Replace with your database password
-        String sql = "UPDATE Product SET Name = ?, Price = ?, Quantity = ? WHERE ProductID = ?";
+        String sql = "UPDATE product SET Name = ?, Price = ?, Quantity = ? WHERE ProductID = ?";
 
         try (Connection conn = DriverManager.getConnection(url, user, password);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -385,7 +385,7 @@ public class DatabaseConnector {
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
 
         // SQL INSERT statement to add a new product to the database
-        String sql = "INSERT INTO Product (name, price, quantity) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO product (name, price, quantity) VALUES (?, ?, ?)";
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, name);
         pstmt.setDouble(2, price);

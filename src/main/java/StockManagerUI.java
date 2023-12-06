@@ -8,7 +8,7 @@
 import com.mysql.cj.util.StringUtils;
 //import finalproject_yupeichen.AddDialogForm;
 
-import finalproject_yupeichen.DatabaseConnector;
+
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -31,6 +31,7 @@ import org.apache.commons.text.similarity.LevenshteinResults;
 
 
 
+
 /**
  *
  * @author isabe
@@ -41,7 +42,7 @@ public class StockManagerUI extends javax.swing.JFrame {
     /**
      * Creates new form StockManagerUI
      */
-    public StockManagerUI(MainFrame mainframe) {
+    public StockManagerUI() {
         initComponents();
     }
 
@@ -192,19 +193,19 @@ public class StockManagerUI extends javax.swing.JFrame {
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateButtonActionPerformed
         int selectedRow = ProductTable.getSelectedRow();
-        if (selectedRow != -1) 
+        if (selectedRow != -1)
         {
             int productId = getSelectedProductId(); // Retrieve the selected product ID
             String name = ProductTable.getValueAt(selectedRow, 1).toString();
             String price = ProductTable.getValueAt(selectedRow, 2).toString();
             String quantity = ProductTable.getValueAt(selectedRow, 3).toString();
-        
+
             UpdateDialogForm updateDialogForm = new UpdateDialogForm(this, true);
             updateDialogForm.setProductId(productId); // Set the product ID
             updateDialogForm.populateFields(name, price, quantity); // Populate the fields
             updateDialogForm.setVisible(true);
-        }   
-        else 
+        }
+        else
         {
             JOptionPane.showMessageDialog(this, "Please select a row to update.", "No Selection", JOptionPane.WARNING_MESSAGE);
         }
@@ -237,13 +238,13 @@ public class StockManagerUI extends javax.swing.JFrame {
         populateTableFromDb();
         //DatabaseConnector.getProducts();
         javax.swing.JOptionPane.showMessageDialog(this, "Refreshed.");
-        
+
     }//GEN-LAST:event_RefreshButtonActionPerformed
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         // TODO add your handling code here:
         String searchKeyword = SearchTextField.getText().toLowerCase();
-    if (searchKeyword.isEmpty()) 
+    if (searchKeyword.isEmpty())
     {
         JOptionPane.showMessageDialog(this, "Please enter a search keyword.", "No Keyword", JOptionPane.WARNING_MESSAGE);
         return;
@@ -254,31 +255,31 @@ public class StockManagerUI extends javax.swing.JFrame {
     int shortestDistance = Integer.MAX_VALUE;
     LevenshteinDetailedDistance levenshteinDetailedDistance = new LevenshteinDetailedDistance();
 
-    for (int i = 0; i < model.getRowCount(); i++) 
+    for (int i = 0; i < model.getRowCount(); i++)
     {
         String entry = model.getValueAt(i, 1).toString().toLowerCase(); // Assuming column 1 (index 1) has the names
         LevenshteinResults results = levenshteinDetailedDistance.apply(entry, searchKeyword);
         int distance = results.getDistance(); // This gets the integer distance from the results
 
-        if (distance < shortestDistance) 
+        if (distance < shortestDistance)
         {
             shortestDistance = distance;
             closestMatchIndex = i;
         }
     }
 
-    if (closestMatchIndex != -1) 
+    if (closestMatchIndex != -1)
     {
         ProductTable.setRowSelectionInterval(closestMatchIndex, closestMatchIndex);
         ProductTable.scrollRectToVisible(new Rectangle(ProductTable.getCellRect(closestMatchIndex, 0, true)));
-    } 
-    else 
+    }
+    else
     {
             JOptionPane.showMessageDialog(this, "No matching product found.", "Search", JOptionPane.INFORMATION_MESSAGE);
-    }    
+    }
     }//GEN-LAST:event_SearchButtonActionPerformed
-    
-    
+
+
     public int getSelectedProductId() {
      int selectedRow = ProductTable.getSelectedRow();
     if (selectedRow != -1) { // -1 means no selection
@@ -288,7 +289,7 @@ public class StockManagerUI extends javax.swing.JFrame {
         return -1; // Or throw new IllegalStateException("No row selected");
     }
 }
-    
+
     public void populateTableFromDb() {
     try {
         ResultSet rs; // This method should return a ResultSet
@@ -296,7 +297,7 @@ public class StockManagerUI extends javax.swing.JFrame {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new String[]{"Product ID", "Name", "Price", "Quantity"}, 0
         );
-        
+
         while (rs.next()) {
             int id = rs.getInt("ProductID");
             String name = rs.getString("Name");
@@ -304,14 +305,14 @@ public class StockManagerUI extends javax.swing.JFrame {
             int quantity = rs.getInt("Quantity");
             tableModel.addRow(new Object[]{id, name, price, quantity});
         }
-        
+
         ProductTable.setModel(tableModel);
     } catch (SQLException e) {
         e.printStackTrace();
         // Handle exception, possibly with a user-friendly error message
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -319,7 +320,7 @@ public class StockManagerUI extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -346,8 +347,8 @@ public class StockManagerUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

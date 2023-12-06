@@ -1,7 +1,7 @@
 
+import java.awt.*;
 import java.math.BigDecimal;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -16,22 +16,81 @@ import javax.swing.table.DefaultTableModel;
 public class OrdersManagementPanel extends javax.swing.JPanel {
     private MainFrame mainFrame;
     private DefaultTableModel currentModel;
+
+    private JTextField[] orderTextFields; // 用于存储订单信息的文本框数组
     
     /**
      * Creates new form OrdersManagementPanel
      */
     public OrdersManagementPanel(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         initComponents();
-        populateOrderTable(); 
+        populateOrderTable();
     }
     
-    public void populateOrderTable(){
-        currentModel = DatabaseConnector.getOrderData();
-        orderViewTable.setModel(currentModel);
+//    public void populateOrderTable(){
+//        currentModel = DatabaseConnector.getOrderData();
+//        orderViewTable.setModel(currentModel);
+//        orderViewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//
+////        orderViewTable.getSelectionModel().addListSelectionListener(e -> updateTextFieldsWithSelectedOrder());
+//    }
+
+    public void populateOrderTable() {
+        // 获取原始的 DefaultTableModel 实例
+        DefaultTableModel originalModel = DatabaseConnector.getOrderData();
+
+        // 创建一个新的 DefaultTableModel 子类实例
+        DefaultTableModel editableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // 允许所有单元格可编辑
+                return true;
+            }
+
+            // 重写其他必要的方法，将调用委托给原始模型
+            @Override
+            public int getRowCount() {
+                return originalModel.getRowCount();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return originalModel.getColumnCount();
+            }
+
+            @Override
+            public Object getValueAt(int row, int column) {
+                return originalModel.getValueAt(row, column);
+            }
+
+            @Override
+            public void setValueAt(Object aValue, int row, int column) {
+                originalModel.setValueAt(aValue, row, column);
+            }
+
+            @Override
+            public String getColumnName(int column) {
+                return originalModel.getColumnName(column);
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return originalModel.getColumnClass(columnIndex);
+            }
+        };
+
+        // 将新的可编辑模型设置为 JTable 的模型
+        orderViewTable.setModel(editableModel);
         orderViewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-//        orderViewTable.getSelectionModel().addListSelectionListener(e -> updateTextFieldsWithSelectedOrder());
     }
+
+
+
+
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -149,9 +208,10 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
                 String billingAddress = (String)orderViewTable.getModel().getValueAt(selectedRow, 7);
                 String notes = (String)orderViewTable.getModel().getValueAt(selectedRow, 8);
 
-                if (DatabaseConnector.updateOrder(orderId, customerId, orderDate, status, totalAmountString, paymentMethod, shippingAddress, billingAddress, notes)) {
-                    populateOrderTable(); 
+                if (DatabaseConnector.updateOrder(orderId, customerId, orderDate, status, totalAmount, paymentMethod, shippingAddress, billingAddress, notes)) {
                     JOptionPane.showMessageDialog(this, "Order updated successfully.");
+                    System.out.println(totalAmount);
+                    populateOrderTable();
                 } else {
                     JOptionPane.showMessageDialog(this, "Failed to update order.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
