@@ -4,12 +4,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 
-public class productPanel extends JPanel {
+public class ProductPanel extends JPanel {
     private MainFrame   mainFrame;
     private JTable productTable;
     private JTextField[] productTextFields; // 存储产品信息的文本框
 
-    public productPanel(MainFrame mainFrame) {
+    public ProductPanel(MainFrame mainFrame) {
         setLayout(new BorderLayout());
         JPanel menuPanel = createMenuPanel();
         JPanel contentPanel = createContentPanel();
