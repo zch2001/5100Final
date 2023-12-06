@@ -24,6 +24,7 @@ public class AdminPanel extends javax.swing.JPanel {
     private Customer selectedCustomer = null;
 
     public AdminPanel(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         initComponents();
         populateTable();
         adminTable.getSelectionModel().addListSelectionListener(e -> {
@@ -147,11 +148,9 @@ public class AdminPanel extends javax.swing.JPanel {
             }
         });
 
-        editButton.setText("Edit");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
+        editButton.setText("Back");
+        editButton.addActionListener(e -> {
+            mainFrame.switchToCard("LoginUI");
         });
 
         nameLabel.setText("Name");

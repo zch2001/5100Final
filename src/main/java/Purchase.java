@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package CustomerRole;
 
 
 import java.sql.Connection;
@@ -273,7 +272,7 @@ public class Purchase extends javax.swing.JFrame {
      */
         try {
         ResultSet rs = DatabaseConnector.getProducts();
-        DefaultTableModel model = new DefaultTableModel(new String[]{ "Product ID", "Name", "Price", "Quantity"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new String[]{ "Product ID", "Quantity", "Name", "Price"}, 0);
 
         int no = 1;
         while (rs.next()) {
@@ -281,8 +280,8 @@ public class Purchase extends javax.swing.JFrame {
                 no++,
                 rs.getString("ProductID"),
                 rs.getString("Name"),
-                rs.getString("Price"),
                 rs.getString("Quantity"),
+                rs.getString("Price"),
             };
             model.addRow(data);
         }
