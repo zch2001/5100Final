@@ -6,6 +6,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -17,6 +18,9 @@ public class AnalystPanel extends JPanel {
     private MainFrame mainFrame;
     private JPanel menuPanel;
     private JPanel contentPanel;
+
+    JButton pieChartButton = new JButton("饼图");
+    JButton barChartButton = new JButton("柱状图");
 
     public AnalystPanel(MainFrame  mainFrame) {
         this.mainFrame = mainFrame;
@@ -78,6 +82,8 @@ public class AnalystPanel extends JPanel {
 
         // 假设这是按钮的事件处理器
         customerButton.addActionListener(e -> {
+            removeAllActionListeners(pieChartButton);
+            removeAllActionListeners(barChartButton);
             // 从数据库中获取数据模型
             DefaultTableModel customerModel = DatabaseConnector.getCustomerData();
             // 创建一个表格来显示这些数据
@@ -86,9 +92,13 @@ public class AnalystPanel extends JPanel {
             JScrollPane scrollPane = new JScrollPane(customerTable);
             // 更新分析面板的内容区域以显示表格
             this.setContentComponent(scrollPane);
+            pieChartButton.addActionListener(event -> showCountryPieChart());
+            barChartButton.addActionListener(event -> showCountryBarChart());
         });
 
         orderButton.addActionListener(e -> {
+            removeAllActionListeners(pieChartButton);
+            removeAllActionListeners(barChartButton);
             // 从数据库中获取数据模型
             DefaultTableModel orderData = DatabaseConnector.getOrderData();
             // 创建一个表格来显示这些数据
@@ -97,10 +107,18 @@ public class AnalystPanel extends JPanel {
             JScrollPane scrollPane = new JScrollPane(orderTable);
             // 更新分析面板的内容区域以显示表格
             this.setContentComponent(scrollPane);
+            pieChartButton.addActionListener(event -> createPieChart());
+            barChartButton.addActionListener(event -> createBarChart());
         });
 
         return panel;
 
+    }
+
+    private void removeAllActionListeners(JButton button) {
+        for (ActionListener al : button.getActionListeners()) {
+            button.removeActionListener(al);
+        }
     }
 
 
@@ -108,13 +126,10 @@ public class AnalystPanel extends JPanel {
 
     // 一个方法来更新内容面板的显示
     public void setContentComponent(Component component) {
+
         JToolBar toolBar = new JToolBar();
-        JButton pieChartButton = new JButton("饼图");
-        JButton barChartButton = new JButton("柱状图");
         toolBar.add(pieChartButton);
         toolBar.add(barChartButton);
-        pieChartButton.addActionListener(e -> showCountryPieChart());
-        barChartButton.addActionListener(e -> showCountryBarChart());
         contentPanel.removeAll();
         contentPanel.add(component);
         contentPanel.revalidate();
@@ -167,6 +182,33 @@ public class AnalystPanel extends JPanel {
         }
 
         return counts;
+    }
+
+    public void createPieChart() {
+        System.out.println("output pie");
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        // 获取订单数据
+        DefaultTableModel orderData = DatabaseConnector.getOrderData();
+        Map<String, Integer> orderCounts = getOrderCounts(orderData);
+
+        // 将数据添加到数据集
+        for (Map.Entry<String, Integer> entry : orderCounts.entrySet()) {
+            dataset.setValue(entry.getKey(), entry.getValue());
+        }
+
+        // 创建饼图
+        JFreeChart pieChart = ChartFactory.createPieChart(
+                "Order Price Intervals",
+                dataset,
+                true,  // 是否显示图例
+                true,  // 是否显示工具提示
+                false  // 是否生成URL
+        );
+
+        // 将图表添加到面板
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+        setContentComponent(chartPanel);
     }
 
 

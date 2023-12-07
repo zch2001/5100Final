@@ -1,4 +1,6 @@
 
+import Utils.UIUtils;
+
 import java.awt.*;
 import java.math.BigDecimal;
 import javax.swing.*;
@@ -27,7 +29,8 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
         initComponents();
         populateOrderTable();
     }
-    
+
+
 //    public void populateOrderTable(){
 //        currentModel = DatabaseConnector.getOrderData();
 //        orderViewTable.setModel(currentModel);
@@ -107,11 +110,15 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
         orderViewTable = new javax.swing.JTable();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(102, 255, 255));
+//        jPanel1.setBackground(new java.awt.Color(102, 255, 255));
+        jPanel1.setBackground(UIUtils.COLOR_BACKGROUND);
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 25)); // NOI18N
         jLabel1.setText("Order Management");
+        jLabel1.setForeground(Color.WHITE);
+
 
         orderViewTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -148,6 +155,11 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
             }
         });
 
+        backButton.setText("Back");
+        backButton.addActionListener(e -> {
+            mainFrame.switchToCard("LoginUI");
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -159,7 +171,9 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
                         .addGap(227, 227, 227)
                         .addComponent(updateButton)
                         .addGap(32, 32, 32)
-                        .addComponent(deleteButton))
+                        .addComponent(deleteButton)
+                        .addGap(32, 32, 32)
+                        .addComponent(backButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(234, 234, 234)
                         .addComponent(jLabel1)))
@@ -171,11 +185,12 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
                 .addGap(45, 45, 45)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(updateButton)
-                    .addComponent(deleteButton))
+                    .addComponent(deleteButton)
+                    .addComponent(backButton))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
 
@@ -247,5 +262,6 @@ public class OrdersManagementPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable orderViewTable;
     private javax.swing.JButton updateButton;
+    private javax.swing.JButton backButton;
     // End of variables declaration//GEN-END:variables
 }

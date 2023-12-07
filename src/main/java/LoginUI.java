@@ -280,7 +280,7 @@ private void addRegisterButton(JPanel panel1) {
                     mainFrame.switchToCard("AnalystPanel");
                     break;
                 case "Harper":
-                    // 如果用户名是 'QiHan'，则显示对应的界面
+                    // 如果用户名是 'Harper'，则显示对应的界面
                     // 例如：mainFrame.switchToCard("QiHanPanel");
                     mainFrame.switchToCard("AdminPanel");
                     break;
@@ -288,6 +288,7 @@ private void addRegisterButton(JPanel panel1) {
                     mainFrame.switchToCard("ProductPanel");
                     StockManagerUI stockManagerUI = new StockManagerUI();
                     stockManagerUI.setVisible(true);
+                    mainFrame.setVisible(false);
 
                     break;
                 case "BellaR":
