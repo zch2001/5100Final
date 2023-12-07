@@ -6,6 +6,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -18,6 +19,9 @@ public class AnalystPanel extends JPanel {
     private JPanel menuPanel;
     private JPanel contentPanel;
 
+    JButton pieChartButton = new JButton("饼图");
+    JButton barChartButton = new JButton("柱状图");
+
     public AnalystPanel(MainFrame  mainFrame) {
         this.mainFrame = mainFrame;
         // 设定布局管理器为边界布局
@@ -27,6 +31,7 @@ public class AnalystPanel extends JPanel {
         menuPanel = createMenuPanel();
         contentPanel = new JPanel(); // 这里可以进一步定制，比如添加卡片布局等
         contentPanel.setBackground(UIUtils.COLOR_BACKGROUND);
+
 
         // 创建一个分隔窗格来分割菜单和内容区域
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPanel, contentPanel);
@@ -46,6 +51,7 @@ public class AnalystPanel extends JPanel {
         JButton orderButton = new JButton("ShowOrder");
         JButton inventoryButton = new JButton("ShowProduct");
         JButton backButton = new JButton("back");
+
 
         // 设置按钮的最大和预期大小以保持一致性
         Dimension buttonSize = new Dimension(120, 40); // 按钮的推荐大小
@@ -69,12 +75,15 @@ public class AnalystPanel extends JPanel {
         panel.add(backButton);
         panel.add(Box.createVerticalGlue()); // 在按钮之后添加一个可拉伸的空白区域
 
+
         backButton.addActionListener(e -> {
             mainFrame.switchToCard("LoginUI");
         });
 
         // 假设这是按钮的事件处理器
         customerButton.addActionListener(e -> {
+            removeAllActionListeners(pieChartButton);
+            removeAllActionListeners(barChartButton);
             // 从数据库中获取数据模型
             DefaultTableModel customerModel = DatabaseConnector.getCustomerData();
             // 创建一个表格来显示这些数据
@@ -83,10 +92,13 @@ public class AnalystPanel extends JPanel {
             JScrollPane scrollPane = new JScrollPane(customerTable);
             // 更新分析面板的内容区域以显示表格
             this.setContentComponent(scrollPane);
-            showCountryPieChart();
+            pieChartButton.addActionListener(event -> showCountryPieChart());
+            barChartButton.addActionListener(event -> showCountryBarChart());
         });
 
         orderButton.addActionListener(e -> {
+            removeAllActionListeners(pieChartButton);
+            removeAllActionListeners(barChartButton);
             // 从数据库中获取数据模型
             DefaultTableModel orderData = DatabaseConnector.getOrderData();
             // 创建一个表格来显示这些数据
@@ -95,11 +107,18 @@ public class AnalystPanel extends JPanel {
             JScrollPane scrollPane = new JScrollPane(orderTable);
             // 更新分析面板的内容区域以显示表格
             this.setContentComponent(scrollPane);
-            createBarChart();
+            pieChartButton.addActionListener(event -> createPieChart());
+            barChartButton.addActionListener(event -> createBarChart());
         });
 
         return panel;
 
+    }
+
+    private void removeAllActionListeners(JButton button) {
+        for (ActionListener al : button.getActionListeners()) {
+            button.removeActionListener(al);
+        }
     }
 
 
@@ -107,10 +126,15 @@ public class AnalystPanel extends JPanel {
 
     // 一个方法来更新内容面板的显示
     public void setContentComponent(Component component) {
+
+        JToolBar toolBar = new JToolBar();
+        toolBar.add(pieChartButton);
+        toolBar.add(barChartButton);
         contentPanel.removeAll();
         contentPanel.add(component);
         contentPanel.revalidate();
         contentPanel.repaint();
+        contentPanel.add(toolBar, BorderLayout.PAGE_START); // 工具栏位于页面顶部
     }
 
     public void createBarChart() {
@@ -138,6 +162,9 @@ public class AnalystPanel extends JPanel {
         setContentComponent(chartPanel);
     }
 
+
+
+
     // 获取每个价格区间的订单数量
 // 获取每个价格区间的订单数量
     private Map<String, Integer> getOrderCounts(DefaultTableModel model) {
@@ -155,6 +182,33 @@ public class AnalystPanel extends JPanel {
         }
 
         return counts;
+    }
+
+    public void createPieChart() {
+        System.out.println("output pie");
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        // 获取订单数据
+        DefaultTableModel orderData = DatabaseConnector.getOrderData();
+        Map<String, Integer> orderCounts = getOrderCounts(orderData);
+
+        // 将数据添加到数据集
+        for (Map.Entry<String, Integer> entry : orderCounts.entrySet()) {
+            dataset.setValue(entry.getKey(), entry.getValue());
+        }
+
+        // 创建饼图
+        JFreeChart pieChart = ChartFactory.createPieChart(
+                "Order Price Intervals",
+                dataset,
+                true,  // 是否显示图例
+                true,  // 是否显示工具提示
+                false  // 是否生成URL
+        );
+
+        // 将图表添加到面板
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+        setContentComponent(chartPanel);
     }
 
 
@@ -197,4 +251,37 @@ public class AnalystPanel extends JPanel {
         ChartPanel chartPanel = new ChartPanel(chart);
         setContentComponent(chartPanel);
     }
+
+    public void showCountryBarChart() {
+        DefaultTableModel customerModel = DatabaseConnector.getCustomerData();
+        Map<String, Integer> countryCount = new HashMap<>();
+
+        // 假设 country 是在第 n 列
+        int countryColumnIndex = customerModel.findColumn("Country");
+
+        for (int i = 0; i < customerModel.getRowCount(); i++) {
+            String country = (String) customerModel.getValueAt(i, countryColumnIndex);
+            countryCount.put(country, countryCount.getOrDefault(country, 0) + 1);
+        }
+
+        // 使用DefaultCategoryDataset来代替DefaultPieDataset
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (Map.Entry<String, Integer> entry : countryCount.entrySet()) {
+            // 在这里，第二个参数是行键，通常用于表示不同系列
+            dataset.addValue(entry.getValue(), "Country", entry.getKey());
+        }
+
+        // 创建柱状图
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Customer Distribution by Country",
+                "Country",
+                "Number of Customers",
+                dataset);
+
+        // 显示柱状图
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        setContentComponent(chartPanel);
+    }
+
 }

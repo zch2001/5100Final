@@ -4,7 +4,6 @@
  */
 
 import javax.swing.*;
-import finalproject_yupeichen.DatabaseConnector;
 
 /**
  *

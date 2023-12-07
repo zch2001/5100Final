@@ -4,10 +4,12 @@
  */
 
 import Dao.Customer;
+import Utils.UIUtils;
 import admin.DatabaseConnector_ADMIN;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,9 @@ public class AdminPanel extends javax.swing.JPanel {
     private Customer selectedCustomer = null;
 
     public AdminPanel(MainFrame mainFrame) {
+        this.setBackground(UIUtils.COLOR_BACKGROUND); // change 'this' to your static JPanel variable name if it's different
+
+        this.mainFrame = mainFrame;
         initComponents();
         populateTable();
         adminTable.getSelectionModel().addListSelectionListener(e -> {
@@ -35,6 +40,7 @@ public class AdminPanel extends javax.swing.JPanel {
 
     // Method to populate the table
     private void populateTable() {
+
 
             selectedCustomer = null;
             DefaultTableModel customerModel = DatabaseConnector.getCustomerData();
@@ -90,6 +96,7 @@ public class AdminPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+
         jScrollPane1 = new javax.swing.JScrollPane();
         adminTable = new javax.swing.JTable();
         titleLabel = new javax.swing.JLabel();
@@ -114,6 +121,17 @@ public class AdminPanel extends javax.swing.JPanel {
         countryTextField = new javax.swing.JTextField();
         createDateTextField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
+        titleLabel.setForeground(Color.WHITE);
+        nameLabel.setForeground(Color.WHITE);
+        emailLabel.setForeground(Color.WHITE);
+        phoneLabel.setForeground(Color.WHITE);
+        addressLabel.setForeground(Color.WHITE);
+        cityLabel.setForeground(Color.WHITE);
+        stateLabel.setForeground(Color.WHITE);
+        zipCodeLabel.setForeground(Color.WHITE);
+        countryLabel.setForeground(Color.WHITE);
+        createDateLabel.setForeground(Color.WHITE);
+
 
 //        adminTable.setModel(new javax.swing.table.DefaultTableModel(
 //            new Object [][] {
@@ -147,11 +165,9 @@ public class AdminPanel extends javax.swing.JPanel {
             }
         });
 
-        editButton.setText("Edit");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
+        editButton.setText("Back");
+        editButton.addActionListener(e -> {
+            mainFrame.switchToCard("LoginUI");
         });
 
         nameLabel.setText("Name");

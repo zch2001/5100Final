@@ -84,3 +84,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 /build/
+
+/jfreechart-1.0.19/
+
